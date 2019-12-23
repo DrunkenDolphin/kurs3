@@ -5,7 +5,6 @@ import com.sberbank.sweater.Entities.User;
 import com.sberbank.sweater.Repo.MessageRepository;
 import com.sberbank.sweater.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +26,6 @@ public class UserService implements UserDetailsService {
     private MailSender mailSender;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Value("${host.url}")
-    private String url;
     @Autowired
     private MessageRepository messageRepository;
     @Override
@@ -61,9 +58,8 @@ public class UserService implements UserDetailsService {
         if (!user.getEmail().isEmpty()) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to Diary. Link to access your account: %s/activate/%s",
+                            "Welcome to Diary. Link to access your account: http://localhost:8080/activate/%s",
                     user.getUsername(),
-                    url,
                     user.getActivationCode()
             );
             mailSender.send(user.getEmail(), "Activation Code", message);
